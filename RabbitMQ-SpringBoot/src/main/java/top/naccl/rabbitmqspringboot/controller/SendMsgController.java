@@ -29,4 +29,14 @@ public class SendMsgController {
 		rabbitTemplate.convertAndSend(TtlQueueConfig.EXCHANGE_X, TtlQueueConfig.QUEUE_A_ROUTING_KEY, "消息来自TTL为10s的队列:" + message);
 		rabbitTemplate.convertAndSend(TtlQueueConfig.EXCHANGE_X, TtlQueueConfig.QUEUE_B_ROUTING_KEY, "消息来自TTL为40s的队列:" + message);
 	}
+
+	@GetMapping("/sendExpirationMsg/{message}/{ttlTime}")
+	public void sendMsg(@PathVariable String message, @PathVariable String ttlTime) {
+		log.info("当前时间:{}, 发送一条TTL为{}ms的消息给队列QC:{}", LocalDateTime.now(), ttlTime, message);
+		rabbitTemplate.convertAndSend(TtlQueueConfig.EXCHANGE_X, TtlQueueConfig.QUEUE_C_ROUTING_KEY, message, msg -> {
+			//设置消息TTL
+			msg.getMessageProperties().setExpiration(ttlTime);
+			return msg;
+		});
+	}
 }
