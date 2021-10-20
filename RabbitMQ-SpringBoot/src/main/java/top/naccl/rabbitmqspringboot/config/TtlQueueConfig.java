@@ -62,7 +62,7 @@ public class TtlQueueConfig {
 		//设置死信routingKey
 		arguments.put("x-dead-letter-routing-key", DEAD_LETTER_QUEUE_D_ROUTING_KEY);
 		//设置TTL 单位ms
-		arguments.put("x-message_ttl", 10000);
+		arguments.put("x-message-ttl", 10000);
 		return QueueBuilder.durable(QUEUE_A).withArguments(arguments).build();
 	}
 
@@ -77,7 +77,7 @@ public class TtlQueueConfig {
 		//设置死信routingKey
 		arguments.put("x-dead-letter-routing-key", DEAD_LETTER_QUEUE_D_ROUTING_KEY);
 		//设置TTL 单位ms
-		arguments.put("x-message_ttl", 40000);
+		arguments.put("x-message-ttl", 40000);
 		return QueueBuilder.durable(QUEUE_B).withArguments(arguments).build();
 	}
 
