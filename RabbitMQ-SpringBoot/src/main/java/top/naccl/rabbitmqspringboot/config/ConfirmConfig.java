@@ -25,29 +25,22 @@ public class ConfirmConfig {
 	public static final String CONFIRM_ROUTING_KEY = "key1";
 
 	@Bean
+	public Queue confirmQueue() {
+		return QueueBuilder.durable(CONFIRM_QUEUE_NAME).build();
+	}
+
+	@Bean
 	public DirectExchange confirmExchange() {
 		return new DirectExchange(CONFIRM_EXCHANGE_NAME);
+
 	}
 
 //	@Bean
 //	public CustomExchange confirmExchange() {
 //		Map<String, Object> arguments = new HashMap<>();
 //		arguments.put("x-delayed-type", "direct");
-//		/**
-//		 * 1.交换机的名称
-//		 * 2.交换机的类型
-//		 * 3.是否需要持久化
-//		 * 4.是否需要自动删除
-//		 * 5.其它参数
-//		 */
 //		return new CustomExchange(CONFIRM_EXCHANGE_NAME, "x-delayed-message", true, false, arguments);
-////		return new DirectExchange(CONFIRM_EXCHANGE_NAME);
 //	}
-
-	@Bean
-	public Queue confirmQueue() {
-		return QueueBuilder.durable(CONFIRM_QUEUE_NAME).build();
-	}
 
 	@Bean
 	public Binding queueBindingExchange(@Qualifier("confirmExchange") DirectExchange confirmExchange,

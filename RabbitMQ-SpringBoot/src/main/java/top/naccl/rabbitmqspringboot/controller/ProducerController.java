@@ -25,15 +25,24 @@ public class ProducerController {
 	@GetMapping("/sendMsg/{message}")
 	public void sendMsg(@PathVariable String message) {
 		CorrelationData correlationData1 = new CorrelationData("1");
-		rabbitTemplate.convertAndSend(ConfirmConfig.CONFIRM_EXCHANGE_NAME, ConfirmConfig.CONFIRM_ROUTING_KEY, message, correlationData1);
-		log.info("发送消息内容：{}", message);
+		rabbitTemplate.convertAndSend(ConfirmConfig.CONFIRM_EXCHANGE_NAME, ConfirmConfig.CONFIRM_ROUTING_KEY, message + "1",/* msg -> {
+			msg.getMessageProperties().setDelay(20000);
+			return msg;
+		},*/ correlationData1);
+		log.info("发送消息内容：{}", message + "1");
 
 		CorrelationData correlationData2 = new CorrelationData("2");
-		rabbitTemplate.convertAndSend(ConfirmConfig.CONFIRM_EXCHANGE_NAME + "?", ConfirmConfig.CONFIRM_ROUTING_KEY, message, correlationData2);
-		log.info("发送消息内容：{}", message);
+		rabbitTemplate.convertAndSend(ConfirmConfig.CONFIRM_EXCHANGE_NAME + "?", ConfirmConfig.CONFIRM_ROUTING_KEY, message + "2",/* msg -> {
+			msg.getMessageProperties().setDelay(20000);
+			return msg;
+		},*/ correlationData2);
+		log.info("发送消息内容：{}", message + "2");
 
 		CorrelationData correlationData3 = new CorrelationData("3");
-		rabbitTemplate.convertAndSend(ConfirmConfig.CONFIRM_EXCHANGE_NAME, ConfirmConfig.CONFIRM_ROUTING_KEY + "?", message, correlationData3);
-		log.info("发送消息内容：{}", message);
+		rabbitTemplate.convertAndSend(ConfirmConfig.CONFIRM_EXCHANGE_NAME, ConfirmConfig.CONFIRM_ROUTING_KEY + "?", message + "3",/* msg -> {
+			msg.getMessageProperties().setDelay(20000);
+			return msg;
+		},*/ correlationData3);
+		log.info("发送消息内容：{}", message + "3");
 	}
 }

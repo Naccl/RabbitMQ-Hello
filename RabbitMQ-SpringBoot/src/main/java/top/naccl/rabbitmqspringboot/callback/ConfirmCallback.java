@@ -22,6 +22,8 @@ public class ConfirmCallback implements RabbitTemplate.ConfirmCallback, RabbitTe
 
 	@PostConstruct
 	public void init() {
+		//也可以通过这种方式替代 spring.rabbitmq.publisher-returns=true
+//		rabbitTemplate.setMandatory(true);
 		//注入
 		rabbitTemplate.setConfirmCallback(this);
 		rabbitTemplate.setReturnsCallback(this);
@@ -29,6 +31,7 @@ public class ConfirmCallback implements RabbitTemplate.ConfirmCallback, RabbitTe
 
 	/**
 	 * 交换机确认回调接口
+	 * 这个回调可以确认消息是否到达交换机
 	 *
 	 * @param correlationData 保存回调消息的id及相关信息
 	 * @param ack             交换机是否收到消息
@@ -40,15 +43,15 @@ public class ConfirmCallback implements RabbitTemplate.ConfirmCallback, RabbitTe
 		if (ack) {
 			log.info("交换机已经收到id为:{}的消息", id);
 		} else {
-			log.info("交换机未收到id为:{}的消息，原因:{}", id, cause);
+			log.error("交换机未收到id为:{}的消息，原因:{}", id, cause);
 		}
 	}
 
 	/**
-	 * 可以在当消息传递过程中不可达目的地时将消息返回给生产者
-	 * 只有在消息不可达目的地的时候才进行回退
+	 * 可以在当消息传递过程中不可达目的地时将消息返回给生产者，只有在消息不可达目的地的时候才进行回退
+	 * 这个回调可以确认消息是否到达队列
 	 *
-	 * @param returned
+	 * @param returned 回退的消息
 	 */
 	@Override
 	public void returnedMessage(ReturnedMessage returned) {
